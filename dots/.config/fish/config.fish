@@ -39,3 +39,33 @@ function update
     nix flake update --flake ~/NixOS
   end
 end
+
+function find_subs
+    set dominio $argv[1]
+    set enumeration_dir "Enumeration"
+    subfinder -d $dominio -o "$enumeration_dir/subs.txt"
+end
+
+function run_nmap
+    set dominio $argv[1]
+    set enumeration_dir "Enumeration"
+    nmap -sV -sC $dominio -oN "$enumeration_dir/nmap.txt"
+end
+
+function enumerate
+    set dominio $argv[1]
+    set enumeration_dir "Enumeration"
+
+    if test -d $enumeration_dir
+        echo "Enumeration directory exists."
+    else
+        mkdir $enumeration_dir
+    end
+
+    echo "Running subfinder..."
+    find_subs $dominio
+
+    echo "Running nmap..."
+    run_nmap $dominio
+end
+
